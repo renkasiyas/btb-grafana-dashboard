@@ -1,0 +1,9 @@
+apiVersion: 1
+datasources:
+  - name: btb-database
+    type: frser-sqlite-datasource
+    access: proxy
+    isDefault: false
+    editable: true
+    jsonData:
+      path: /app/crypto_trading.db

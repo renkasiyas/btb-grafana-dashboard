@@ -1,0 +1,639 @@
+{
+  "annotations": {
+    "list": [{
+      "builtIn": 1,
+      "datasource": "-- Grafana --",
+      "enable": true,
+      "hide": true,
+      "iconColor": "rgba(0, 211, 255, 1)",
+      "name": "Annotations & Alerts",
+      "target": {
+        "limit": 100,
+        "matchAny": false,
+        "tags": [],
+        "type": "dashboard"
+      },
+      "type": "dashboard"
+    }]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 1,
+  "iteration": 1641768064605,
+  "links": [],
+  "panels": [{
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 6,
+      "panels": [],
+      "repeat": "database",
+      "title": "${database}",
+      "type": "row"
+    },
+    {
+      "datasource": "btb-database",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "right",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "currencyUSD"
+        },
+        "overrides": [{
+            "matcher": {
+              "id": "byName",
+              "options": "Value in USD"
+            },
+            "properties": [{
+                "id": "custom.showPoints",
+                "value": "always"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    0,
+                    3,
+                    3
+                  ],
+                  "fill": "dot"
+                }
+              },
+              {
+                "id": "custom.lineInterpolation",
+                "value": "stepAfter"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Change in %"
+            },
+            "properties": [{
+                "id": "custom.axisPlacement",
+                "value": "left"
+              },
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 24,
+        "x": 0,
+        "y": 1
+      },
+      "id": 10,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "hidden",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [{
+          "hide": false,
+          "queryText": "SELECT\n  REPLACE (datetime, ' ', 'T') || 'Z' AS datetime,\n  sum(balance * usd_price) AS \"Bot holdings value\"\nFROM\n  coin_value\nGROUP BY\n  datetime",
+          "queryType": "table",
+          "rawQueryText": "SELECT\n  REPLACE (datetime, ' ', 'T') || 'Z' AS datetime,\n  sum(balance * usd_price) AS \"Bot holdings value\"\nFROM\n  coin_value\nGROUP BY\n  datetime",
+          "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts",
+            "datetime"
+          ]
+        },
+        {
+          "hide": false,
+          "queryText": "SELECT\n  REPLACE (datetime, ' ', 'T') || 'Z' AS datetime,\n  crypto_trade_amount as \"Value in USD\"\nFROM\n  trade_history\nWHERE\n  state = 'COMPLETE'\n  AND selling = 0",
+          "queryType": "table",
+          "rawQueryText": "SELECT\n  REPLACE (datetime, ' ', 'T') || 'Z' AS datetime,\n  crypto_trade_amount as \"Value in USD\"\nFROM\n  trade_history\nWHERE\n  state = 'COMPLETE'\n  AND selling = 0",
+          "refId": "B",
+          "timeColumns": [
+            "time",
+            "ts",
+            "datetime"
+          ]
+        },
+        {
+          "hide": false,
+          "queryText": "SELECT \n    REPLACE (datetime, ' ', 'T') || 'Z' AS datetime, \n    (crypto_trade_amount / FIRST_VALUE(crypto_trade_amount) OVER (ORDER BY datetime) - 1) AS \"Change in %\"\nFROM \n    trade_history \nWHERE \n    state='COMPLETE' AND selling=0",
+          "queryType": "table",
+          "rawQueryText": "SELECT \n    REPLACE (datetime, ' ', 'T') || 'Z' AS datetime, \n    (crypto_trade_amount / FIRST_VALUE(crypto_trade_amount) OVER (ORDER BY datetime) - 1) AS \"Change in %\"\nFROM \n    trade_history \nWHERE \n    state='COMPLETE' AND selling=0",
+          "refId": "C",
+          "timeColumns": [
+            "time",
+            "ts",
+            "datetime"
+          ]
+        }
+      ],
+      "title": "USD Value Progress",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "btb-database",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 2,
+        "x": 0,
+        "y": 12
+      },
+      "id": 92,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.1.4",
+      "targets": [{
+        "queryText": "SELECT COUNT (*) FROM trade_history WHERE selling=0",
+        "queryType": "table",
+        "rawQueryText": "SELECT COUNT (*) FROM trade_history WHERE selling=0",
+        "refId": "A",
+        "timeColumns": [
+          "time",
+          "ts"
+        ]
+      }],
+      "title": "Jumps",
+      "type": "stat"
+    },
+    {
+      "datasource": "btb-database",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "fixed"
+          },
+          "decimals": 4,
+          "mappings": [],
+          "noValue": "-",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [{
+          "matcher": {
+            "id": "byName",
+            "options": "Change"
+          },
+          "properties": [{
+              "id": "unit",
+              "value": "percentunit"
+            },
+            {
+              "id": "decimals",
+              "value": 2
+            }
+          ]
+        }]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 10,
+        "x": 2,
+        "y": 12
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.1.4",
+      "targets": [{
+        "hide": false,
+        "queryText": "SELECT  \nalt_coin_id as \"Current coin\", alt_trade_amount as \"Current Amount\", \n(SELECT alt_trade_amount FROM trade_history WHERE alt_coin_id=(SELECT alt_coin_id  FROM trade_history WHERE selling=0 ORDER BY datetime DESC LIMIT 1) ORDER BY datetime DESC LIMIT 1,2) AS \"Last Amount\", \n(alt_trade_amount / (SELECT alt_trade_amount FROM trade_history WHERE alt_coin_id=(SELECT alt_coin_id  FROM trade_history WHERE selling=0 ORDER BY datetime DESC LIMIT 1) ORDER BY datetime DESC LIMIT 1,2) -1 ) AS \"Change\" \nFROM \ntrade_history \nWHERE\nselling=0 AND alt_coin_id=(SELECT alt_coin_id  FROM trade_history WHERE selling=0 ORDER BY datetime DESC LIMIT 1) \nORDER BY \ndatetime DESC LIMIT 1;",
+        "queryType": "table",
+        "rawQueryText": "SELECT  \nalt_coin_id as \"Current coin\", alt_trade_amount as \"Current Amount\", \n(SELECT alt_trade_amount FROM trade_history WHERE alt_coin_id=(SELECT alt_coin_id  FROM trade_history WHERE selling=0 ORDER BY datetime DESC LIMIT 1) ORDER BY datetime DESC LIMIT 1,2) AS \"Last Amount\", \n(alt_trade_amount / (SELECT alt_trade_amount FROM trade_history WHERE alt_coin_id=(SELECT alt_coin_id  FROM trade_history WHERE selling=0 ORDER BY datetime DESC LIMIT 1) ORDER BY datetime DESC LIMIT 1,2) -1 ) AS \"Change\" \nFROM \ntrade_history \nWHERE\nselling=0 AND alt_coin_id=(SELECT alt_coin_id  FROM trade_history WHERE selling=0 ORDER BY datetime DESC LIMIT 1) \nORDER BY \ndatetime DESC LIMIT 1;",
+        "refId": "A",
+        "timeColumns": [
+          "time",
+          "ts"
+        ]
+      }],
+      "title": "Current Coin",
+      "type": "stat"
+    },
+    {
+      "datasource": "btb-database",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-RdYlGr"
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 95,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 12
+      },
+      "id": 2,
+      "options": {
+        "displayMode": "lcd",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^percentage$/",
+          "limit": 5,
+          "values": true
+        },
+        "showUnfilled": true,
+        "text": {}
+      },
+      "pluginVersion": "8.1.4",
+      "targets": [{
+        "hide": false,
+        "queryText": "SELECT p.to_coin_id as other_coin, ((1-0.001*0.001-0.002) * current_coin_price / (sh.target_ratio *(1+0.01)) / sh.other_coin_price) * 100 as 'percentage' FROM scout_history sh JOIN pairs p ON p.id = sh.pair_id WHERE p.from_coin_id = (SELECT alt_coin_id FROM trade_history ORDER BY datetime DESC LIMIT 1) ORDER BY sh.datetime DESC, percentage DESC LIMIT (SELECT count(DISTINCT pairs.to_coin_id) FROM pairs JOIN coins ON coins.symbol = pairs.to_coin_id WHERE coins.enabled = 1 AND pairs.from_coin_id=(SELECT alt_coin_id FROM trade_history ORDER BY datetime DESC LIMIT 1))",
+        "queryType": "table",
+        "rawQueryText": "SELECT p.to_coin_id as other_coin, ((1-0.001*0.001-0.002) * current_coin_price / (sh.target_ratio *(1+0.01)) / sh.other_coin_price) * 100 as 'percentage' FROM scout_history sh JOIN pairs p ON p.id = sh.pair_id WHERE p.from_coin_id = (SELECT alt_coin_id FROM trade_history ORDER BY datetime DESC LIMIT 1) ORDER BY sh.datetime DESC, percentage DESC LIMIT (SELECT count(DISTINCT pairs.to_coin_id) FROM pairs JOIN coins ON coins.symbol = pairs.to_coin_id WHERE coins.enabled = 1 AND pairs.from_coin_id=(SELECT alt_coin_id FROM trade_history ORDER BY datetime DESC LIMIT 1))",
+        "refId": "B",
+        "timeColumns": [
+          "time",
+          "ts",
+          "datetime"
+        ]
+      }],
+      "title": "Next coin",
+      "type": "bargauge"
+    },
+    {
+      "datasource": "btb-database",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "hidden",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "stepAfter",
+            "lineWidth": 1,
+            "pointSize": 7,
+            "scaleDistribution": {
+              "log": 10,
+              "type": "log"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 15,
+        "x": 0,
+        "y": 20
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "right"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "8.2.3",
+      "targets": [{
+        "hide": false,
+        "queryText": "SELECT \nREPLACE (datetime, ' ', 'T') || 'Z' AS datetime,\nalt_coin_id AS coin, \nalt_trade_amount AS amount\nFROM trade_history\nWHERE state = 'COMPLETE' AND selling = 0",
+        "queryType": "time series",
+        "rawQueryText": "SELECT \nREPLACE (datetime, ' ', 'T') || 'Z' AS datetime,\nalt_coin_id AS coin, \nalt_trade_amount AS amount\nFROM trade_history\nWHERE state = 'COMPLETE' AND selling = 0",
+        "refId": "A",
+        "timeColumns": [
+          "time",
+          "ts",
+          "datetime"
+        ]
+      }],
+      "title": "Coins progress",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "btb-database",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [{
+            "matcher": {
+              "id": "byName",
+              "options": "trade_id"
+            },
+            "properties": [{
+              "id": "custom.width",
+              "value": 39
+            }]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "coin"
+            },
+            "properties": [{
+              "id": "custom.width",
+              "value": 84
+            }]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "alt_trade_amount"
+            },
+            "properties": [{
+              "id": "custom.width",
+              "value": 127
+            }]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "datetime"
+            },
+            "properties": [{
+              "id": "custom.width",
+              "value": 106
+            }]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "USD value"
+            },
+            "properties": [{
+              "id": "custom.width",
+              "value": 122
+            }]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 9,
+        "x": 15,
+        "y": 20
+      },
+      "id": 66,
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "8.1.4",
+      "targets": [{
+        "queryText": "SELECT id as trade_id, REPLACE (datetime, ' ', 'T') || 'Z' AS datetime, alt_coin_id AS coin, alt_trade_amount, crypto_trade_amount AS 'USD value' FROM trade_history WHERE selling=0 ORDER BY datetime DESC",
+        "queryType": "table",
+        "rawQueryText": "SELECT id as trade_id, REPLACE (datetime, ' ', 'T') || 'Z' AS datetime, alt_coin_id AS coin, alt_trade_amount, crypto_trade_amount AS 'USD value' FROM trade_history WHERE selling=0 ORDER BY datetime DESC",
+        "refId": "A",
+        "timeColumns": [
+          "time",
+          "ts",
+          "datetime"
+        ]
+      }],
+      "title": "Progress",
+      "type": "table"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 30,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [{
+      "current": {
+        "selected": true,
+        "text": [
+          "All"
+        ],
+        "value": [
+          "$__all"
+        ]
+      },
+      "description": null,
+      "error": null,
+      "hide": 0,
+      "includeAll": true,
+      "label": null,
+      "multi": true,
+      "name": "database",
+      "options": [],
+      "query": "frser-sqlite-datasource",
+      "queryValue": "",
+      "refresh": 1,
+      "regex": "",
+      "skipUrlSync": false,
+      "type": "datasource"
+    }]
+  },
+  "time": {
+    "from": "2022-01-01T00:00:00.000Z",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Europe/London",
+  "title": "btb-grafana-dashboard",
+  "uid": "YL0kPz2nz",
+  "version": 8
+}
