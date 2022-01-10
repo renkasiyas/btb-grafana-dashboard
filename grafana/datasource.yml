@@ -1,0 +1,23 @@
+apiVersion: 1
+datasources:
+  - name: btb-database_1
+    type: frser-sqlite-datasource
+    access: proxy
+    isDefault: false
+    editable: true
+    jsonData:
+      path: /app/database-1.db
+  # - name: btb-database_2
+  #   type: frser-sqlite-datasource
+  #   access: proxy
+  #   isDefault: false
+  #   editable: true
+  #   jsonData:
+  #     path: /app/database-2.db
+  # - name: btb-database_3
+  #   type: frser-sqlite-datasource
+  #   access: proxy
+  #   isDefault: false
+  #   editable: true
+  #   jsonData:
+  #     path: /app/database-3.db

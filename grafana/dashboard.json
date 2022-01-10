@@ -38,7 +38,7 @@
       "type": "row"
     },
     {
-      "datasource": "btb-database",
+      "datasource": "${database}",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -200,7 +200,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": "btb-database",
+      "datasource": "${database}",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -259,7 +259,7 @@
       "type": "stat"
     },
     {
-      "datasource": "btb-database",
+      "datasource": "${database}",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -336,7 +336,7 @@
       "type": "stat"
     },
     {
-      "datasource": "btb-database",
+      "datasource": "${database}",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -400,7 +400,7 @@
       "type": "bargauge"
     },
     {
-      "datasource": "btb-database",
+      "datasource": "${database}",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -486,7 +486,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": "btb-database",
+      "datasource": "${database}",
       "fieldConfig": {
         "defaults": {
           "color": {

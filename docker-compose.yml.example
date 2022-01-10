@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  btb_grafana_dashboard:
+    extends:
+      file: common-services.yml
+      service: btb_grafana_dashboard
+    volumes:
+      - ${DB_PATH_1}:/app/database-1.db
+      # - ${DB_PATH_2}:/app/database-2.db
+      # - ${DB_PATH_3}:/app/database-3.db
