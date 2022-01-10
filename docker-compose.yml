@@ -8,8 +8,8 @@ services:
     ports:
       - 42069:42069
     volumes:
-      - ./dashboard.json:/app/dashboard.json
       - ./example_database.db:/app/crypto_trading.db
+      - ./dashboard.json:/app/dashboard.json
       - ./datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
       - ./dashboard.yml:/etc/grafana/provisioning/dashboards/dashboard.yml
     environment:
