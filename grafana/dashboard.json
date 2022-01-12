@@ -20,7 +20,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1641768064605,
+  "iteration": 1641968288561,
   "links": [],
   "panels": [{
       "collapsed": false,
@@ -204,65 +204,6 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [{
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 2,
-        "x": 0,
-        "y": 12
-      },
-      "id": 92,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "last"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "text": {},
-        "textMode": "auto"
-      },
-      "pluginVersion": "8.1.4",
-      "targets": [{
-        "queryText": "SELECT COUNT (*) FROM trade_history WHERE selling=0",
-        "queryType": "table",
-        "rawQueryText": "SELECT COUNT (*) FROM trade_history WHERE selling=0",
-        "refId": "A",
-        "timeColumns": [
-          "time",
-          "ts"
-        ]
-      }],
-      "title": "Jumps",
-      "type": "stat"
-    },
-    {
-      "datasource": "${database}",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
             "fixedColor": "green",
             "mode": "fixed"
           },
@@ -300,8 +241,8 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 10,
-        "x": 2,
+        "w": 9,
+        "x": 0,
         "y": 12
       },
       "id": 4,
@@ -337,6 +278,120 @@
     },
     {
       "datasource": "${database}",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 2,
+        "x": 9,
+        "y": 12
+      },
+      "id": 92,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.1.4",
+      "targets": [{
+        "queryText": "SELECT COUNT (*) FROM trade_history WHERE selling=0",
+        "queryType": "table",
+        "rawQueryText": "SELECT COUNT (*) FROM trade_history WHERE selling=0",
+        "refId": "A",
+        "timeColumns": [
+          "time",
+          "ts"
+        ]
+      }],
+      "title": "Jumps",
+      "type": "stat"
+    },
+    {
+      "datasource": "${database}",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-RdYlGr"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 13,
+        "x": 11,
+        "y": 12
+      },
+      "id": 201,
+      "options": {
+        "displayMode": "basic",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "",
+          "values": true
+        },
+        "showUnfilled": true,
+        "text": {}
+      },
+      "pluginVersion": "8.1.4",
+      "targets": [{
+        "queryText": "SELECT\nCOUNT(*) as \"Total jumps\",\nalt_coin_id as \"Coin\"\nFROM trade_history WHERE selling=0\nGROUP BY alt_coin_id\nORDER BY \"Total jumps\" DESC\n",
+        "queryType": "table",
+        "rawQueryText": "SELECT\nCOUNT(*) as \"Total jumps\",\nalt_coin_id as \"Coin\"\nFROM trade_history WHERE selling=0\nGROUP BY alt_coin_id\nORDER BY \"Total jumps\" DESC\n",
+        "refId": "A",
+        "timeColumns": [
+          "time",
+          "ts"
+        ]
+      }],
+      "title": "Total Jumps by Coin",
+      "type": "bargauge"
+    },
+    {
+      "datasource": "${database}",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -345,7 +400,7 @@
           },
           "mappings": [],
           "max": 100,
-          "min": 95,
+          "min": 90,
           "thresholds": {
             "mode": "absolute",
             "steps": [{
@@ -364,9 +419,9 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 12
+        "w": 24,
+        "x": 0,
+        "y": 20
       },
       "id": 2,
       "options": {
@@ -377,7 +432,7 @@
             "lastNotNull"
           ],
           "fields": "/^percentage$/",
-          "limit": 5,
+          "limit": 10,
           "values": true
         },
         "showUnfilled": true,
@@ -456,7 +511,7 @@
         "h": 13,
         "w": 15,
         "x": 0,
-        "y": 20
+        "y": 28
       },
       "id": 12,
       "options": {
@@ -566,7 +621,7 @@
         "h": 13,
         "w": 9,
         "x": 15,
-        "y": 20
+        "y": 28
       },
       "id": 66,
       "options": {
@@ -635,5 +690,5 @@
   "timezone": "Europe/London",
   "title": "btb-grafana-dashboard",
   "uid": "YL0kPz2nz",
-  "version": 8
+  "version": 4
 }

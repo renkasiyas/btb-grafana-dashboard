@@ -9,6 +9,9 @@ Grafana dashboard for [Binance Trade Bot](https://github.com/MasaiasuOse/binance
 **Prerequisites**: Docker and docker-compose.
 
 1. Copy file `docker-compose.yml.example` to `docker-compose.yml`.
+```bash
+cp docker-compose.yml.example docker-compose.yml
+```
 2. Edit `.env` file with the following:
   - Line 1 and 2 change your credentials. For example:
 ```bash
