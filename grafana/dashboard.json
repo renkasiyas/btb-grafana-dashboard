@@ -17,14 +17,14 @@
     }]
   },
   "editable": true,
-  "gnetId": null,
+  "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1641968288561,
+  "iteration": 1642108394892,
   "links": [],
+  "liveNow": false,
   "panels": [{
       "collapsed": false,
-      "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -38,7 +38,10 @@
       "type": "row"
     },
     {
-      "datasource": "${database}",
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "${database}"
+      },
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -94,7 +97,7 @@
         "overrides": [{
             "matcher": {
               "id": "byName",
-              "options": "Value in USD"
+              "options": "Jump Fiat Value"
             },
             "properties": [{
                 "id": "custom.showPoints",
@@ -108,16 +111,26 @@
                 "id": "custom.lineStyle",
                 "value": {
                   "dash": [
-                    0,
-                    3,
-                    3
+                    10,
+                    30
                   ],
-                  "fill": "dot"
+                  "fill": "dash"
                 }
               },
               {
                 "id": "custom.lineInterpolation",
                 "value": "stepAfter"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "purple",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
               }
             ]
           },
@@ -139,6 +152,25 @@
                 "value": 0
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "BTC value"
+            },
+            "properties": [{
+                "id": "custom.axisPlacement",
+                "value": "auto"
+              },
+              {
+                "id": "decimals",
+                "value": 5
+              },
+              {
+                "id": "unit",
+                "value": "₿"
+              }
+            ]
           }
         ]
       },
@@ -152,7 +184,7 @@
       "options": {
         "legend": {
           "calcs": [],
-          "displayMode": "hidden",
+          "displayMode": "table",
           "placement": "bottom"
         },
         "tooltip": {
@@ -160,10 +192,14 @@
         }
       },
       "targets": [{
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "${database}"
+          },
           "hide": false,
-          "queryText": "SELECT\n  REPLACE (datetime, ' ', 'T') || 'Z' AS datetime,\n  sum(balance * usd_price) AS \"Bot holdings value\"\nFROM\n  coin_value\nGROUP BY\n  datetime",
+          "queryText": "SELECT\n  REPLACE (datetime, ' ', 'T') || 'Z' AS datetime,\n  max(balance * usd_price) AS \"USD value\"\nFROM\n  coin_value\nGROUP BY strftime('%s', datetime) / 900",
           "queryType": "table",
-          "rawQueryText": "SELECT\n  REPLACE (datetime, ' ', 'T') || 'Z' AS datetime,\n  sum(balance * usd_price) AS \"Bot holdings value\"\nFROM\n  coin_value\nGROUP BY\n  datetime",
+          "rawQueryText": "SELECT\n  REPLACE (datetime, ' ', 'T') || 'Z' AS datetime,\n  max(balance * usd_price) AS \"USD value\"\nFROM\n  coin_value\nGROUP BY strftime('%s', datetime) / 900",
           "refId": "A",
           "timeColumns": [
             "time",
@@ -172,10 +208,14 @@
           ]
         },
         {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "${database}"
+          },
           "hide": false,
-          "queryText": "SELECT\n  REPLACE (datetime, ' ', 'T') || 'Z' AS datetime,\n  crypto_trade_amount as \"Value in USD\"\nFROM\n  trade_history\nWHERE\n  state = 'COMPLETE'\n  AND selling = 0",
+          "queryText": "SELECT\n  REPLACE (datetime, ' ', 'T') || 'Z' AS datetime,\n  crypto_trade_amount as \"Jump Fiat Value\"\nFROM\n  trade_history\nWHERE\n  state = 'COMPLETE'\n  AND selling = 0",
           "queryType": "table",
-          "rawQueryText": "SELECT\n  REPLACE (datetime, ' ', 'T') || 'Z' AS datetime,\n  crypto_trade_amount as \"Value in USD\"\nFROM\n  trade_history\nWHERE\n  state = 'COMPLETE'\n  AND selling = 0",
+          "rawQueryText": "SELECT\n  REPLACE (datetime, ' ', 'T') || 'Z' AS datetime,\n  crypto_trade_amount as \"Jump Fiat Value\"\nFROM\n  trade_history\nWHERE\n  state = 'COMPLETE'\n  AND selling = 0",
           "refId": "B",
           "timeColumns": [
             "time",
@@ -184,11 +224,31 @@
           ]
         },
         {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "${database}"
+          },
           "hide": false,
           "queryText": "SELECT \n    REPLACE (datetime, ' ', 'T') || 'Z' AS datetime, \n    (crypto_trade_amount / FIRST_VALUE(crypto_trade_amount) OVER (ORDER BY datetime) - 1) AS \"Change in %\"\nFROM \n    trade_history \nWHERE \n    state='COMPLETE' AND selling=0",
           "queryType": "table",
           "rawQueryText": "SELECT \n    REPLACE (datetime, ' ', 'T') || 'Z' AS datetime, \n    (crypto_trade_amount / FIRST_VALUE(crypto_trade_amount) OVER (ORDER BY datetime) - 1) AS \"Change in %\"\nFROM \n    trade_history \nWHERE \n    state='COMPLETE' AND selling=0",
           "refId": "C",
+          "timeColumns": [
+            "time",
+            "ts",
+            "datetime"
+          ]
+        },
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "${database}"
+          },
+          "hide": false,
+          "queryText": "SELECT\n  REPLACE (datetime, ' ', 'T') || 'Z' AS datetime,\n  max(balance * btc_price) AS \"BTC value\"\nFROM\n  coin_value\nGROUP BY strftime('%s', datetime) / 900",
+          "queryType": "table",
+          "rawQueryText": "SELECT\n  REPLACE (datetime, ' ', 'T') || 'Z' AS datetime,\n  max(balance * btc_price) AS \"BTC value\"\nFROM\n  coin_value\nGROUP BY strftime('%s', datetime) / 900",
+          "refId": "D",
           "timeColumns": [
             "time",
             "ts",
@@ -200,7 +260,9 @@
       "type": "timeseries"
     },
     {
-      "datasource": "${database}",
+      "datasource": {
+        "uid": "${database}"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -261,7 +323,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.1.4",
+      "pluginVersion": "8.3.0",
       "targets": [{
         "hide": false,
         "queryText": "SELECT  \nalt_coin_id as \"Current coin\", alt_trade_amount as \"Current Amount\", \n(SELECT alt_trade_amount FROM trade_history WHERE alt_coin_id=(SELECT alt_coin_id  FROM trade_history WHERE selling=0 ORDER BY datetime DESC LIMIT 1) ORDER BY datetime DESC LIMIT 1,2) AS \"Last Amount\", \n(alt_trade_amount / (SELECT alt_trade_amount FROM trade_history WHERE alt_coin_id=(SELECT alt_coin_id  FROM trade_history WHERE selling=0 ORDER BY datetime DESC LIMIT 1) ORDER BY datetime DESC LIMIT 1,2) -1 ) AS \"Change\" \nFROM \ntrade_history \nWHERE\nselling=0 AND alt_coin_id=(SELECT alt_coin_id  FROM trade_history WHERE selling=0 ORDER BY datetime DESC LIMIT 1) \nORDER BY \ndatetime DESC LIMIT 1;",
@@ -277,7 +339,9 @@
       "type": "stat"
     },
     {
-      "datasource": "${database}",
+      "datasource": {
+        "uid": "${database}"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -321,7 +385,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.1.4",
+      "pluginVersion": "8.3.0",
       "targets": [{
         "queryText": "SELECT COUNT (*) FROM trade_history WHERE selling=0",
         "queryType": "table",
@@ -336,7 +400,9 @@
       "type": "stat"
     },
     {
-      "datasource": "${database}",
+      "datasource": {
+        "uid": "${database}"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -376,7 +442,7 @@
         "showUnfilled": true,
         "text": {}
       },
-      "pluginVersion": "8.1.4",
+      "pluginVersion": "8.3.0",
       "targets": [{
         "queryText": "SELECT\nCOUNT(*) as \"Total jumps\",\nalt_coin_id as \"Coin\"\nFROM trade_history WHERE selling=0\nGROUP BY alt_coin_id\nORDER BY \"Total jumps\" DESC\n",
         "queryType": "table",
@@ -391,7 +457,9 @@
       "type": "bargauge"
     },
     {
-      "datasource": "${database}",
+      "datasource": {
+        "uid": "${database}"
+      },
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -438,7 +506,7 @@
         "showUnfilled": true,
         "text": {}
       },
-      "pluginVersion": "8.1.4",
+      "pluginVersion": "8.3.0",
       "targets": [{
         "hide": false,
         "queryText": "SELECT p.to_coin_id as other_coin, ((1-0.001*0.001-0.002) * current_coin_price / (sh.target_ratio *(1+0.01)) / sh.other_coin_price) * 100 as 'percentage' FROM scout_history sh JOIN pairs p ON p.id = sh.pair_id WHERE p.from_coin_id = (SELECT alt_coin_id FROM trade_history ORDER BY datetime DESC LIMIT 1) ORDER BY sh.datetime DESC, percentage DESC LIMIT (SELECT count(DISTINCT pairs.to_coin_id) FROM pairs JOIN coins ON coins.symbol = pairs.to_coin_id WHERE coins.enabled = 1 AND pairs.from_coin_id=(SELECT alt_coin_id FROM trade_history ORDER BY datetime DESC LIMIT 1))",
@@ -455,7 +523,9 @@
       "type": "bargauge"
     },
     {
-      "datasource": "${database}",
+      "datasource": {
+        "uid": "${database}"
+      },
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -541,7 +611,9 @@
       "type": "timeseries"
     },
     {
-      "datasource": "${database}",
+      "datasource": {
+        "uid": "${database}"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -635,7 +707,7 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "8.1.4",
+      "pluginVersion": "8.3.0",
       "targets": [{
         "queryText": "SELECT id as trade_id, REPLACE (datetime, ' ', 'T') || 'Z' AS datetime, alt_coin_id AS coin, alt_trade_amount, crypto_trade_amount AS 'USD value' FROM trade_history WHERE selling=0 ORDER BY datetime DESC",
         "queryType": "table",
@@ -651,8 +723,8 @@
       "type": "table"
     }
   ],
-  "refresh": "30s",
-  "schemaVersion": 30,
+  "refresh": false,
+  "schemaVersion": 33,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -666,11 +738,8 @@
           "$__all"
         ]
       },
-      "description": null,
-      "error": null,
       "hide": 0,
       "includeAll": true,
-      "label": null,
       "multi": true,
       "name": "database",
       "options": [],
@@ -683,12 +752,13 @@
     }]
   },
   "time": {
-    "from": "2022-01-01T00:00:00.000Z",
+    "from": "2021-12-12T23:12:26.000Z",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "Europe/London",
   "title": "btb-grafana-dashboard",
   "uid": "YL0kPz2nz",
-  "version": 4
+  "version": 2,
+  "weekStart": ""
 }

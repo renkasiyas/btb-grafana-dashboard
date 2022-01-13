@@ -1,2 +1,2 @@
 *.db
-docker-compose.yml
+.env

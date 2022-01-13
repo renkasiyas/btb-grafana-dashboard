@@ -4,37 +4,35 @@
 
 Grafana dashboard for [Binance Trade Bot](https://github.com/MasaiasuOse/binance-trade-bot).
 
-## Installation
+# Installation
 
 **Prerequisites**: Docker and docker-compose.
 
-1. Copy file `docker-compose.yml.example` to `docker-compose.yml`.
+1. Clone the file `.env.example` to `.env`
 ```bash
-cp docker-compose.yml.example docker-compose.yml
+cp .env.example .env
 ```
+
 2. Edit `.env` file with the following:
   - Line 1 and 2 change your credentials. For example:
 ```bash
 GRAFANA_ADMIN_USER=admin
 GRAFANA_ADMIN_PASSWORD=6783jdhf!
 ```
-
   - Line 3, port to use. For example:
 ```bash
 GRAFANA_HTTP_PORT=42069
 ```
-
-  - Relative path of your btb database. For example:
+  - Line 5, the relative path of your btb database. For example:
 ```bash
 DB_PATH_1=../binance-trade-bot/data/crypto_trading.db
 ``` 
 
 3. Run `docker-compose up -d` and go to [http://YOUR_PUBLIC_IP:YOUR_PORT](http://127.0.0.1:42069) in your browser.
 
+# Multi-bots support
 
-## Multi-bots support
-
-If you want to support more than one bot, you can do it by the following:
+Only if you want to support more than one bot, you can do it by the following:
 
 1. Edit `.env` file adding more database paths variables. For example:
 ```bash
@@ -79,8 +77,7 @@ datasources:
     jsonData:
       path: /app/database-3.db # Same path in docker-compose.yml volumes.
 ```
-
   
-## Oracle Cloud (OCI)
+# Oracle Cloud (OCI)
 
 If you're using an Oracle Cloud Instance, you'll need to open the selected port in your Oracle web GUI. Only reference I found is [this tutorial video](https://www.youtube.com/watch?v=cHIphTiYMpw).
