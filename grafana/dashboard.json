@@ -20,7 +20,7 @@
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1642108394892,
+  "iteration": 1642110094330,
   "links": [],
   "liveNow": false,
   "panels": [{
@@ -111,10 +111,11 @@
                 "id": "custom.lineStyle",
                 "value": {
                   "dash": [
-                    10,
-                    30
+                    0,
+                    3,
+                    3
                   ],
-                  "fill": "dash"
+                  "fill": "dot"
                 }
               },
               {
@@ -150,6 +151,13 @@
               {
                 "id": "custom.fillOpacity",
                 "value": 0
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
               }
             ]
           },
@@ -160,7 +168,7 @@
             },
             "properties": [{
                 "id": "custom.axisPlacement",
-                "value": "auto"
+                "value": "right"
               },
               {
                 "id": "decimals",
@@ -169,6 +177,13 @@
               {
                 "id": "unit",
                 "value": "₿"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
               }
             ]
           }
@@ -197,10 +212,26 @@
             "uid": "${database}"
           },
           "hide": false,
-          "queryText": "SELECT\n  REPLACE (datetime, ' ', 'T') || 'Z' AS datetime,\n  max(balance * usd_price) AS \"USD value\"\nFROM\n  coin_value\nGROUP BY strftime('%s', datetime) / 900",
+          "queryText": "SELECT\n  REPLACE (datetime, ' ', 'T') || 'Z' AS datetime,\n  max(balance * usd_price) AS \"USD value\"\nFROM\n  coin_value\nGROUP BY id/100",
           "queryType": "table",
-          "rawQueryText": "SELECT\n  REPLACE (datetime, ' ', 'T') || 'Z' AS datetime,\n  max(balance * usd_price) AS \"USD value\"\nFROM\n  coin_value\nGROUP BY strftime('%s', datetime) / 900",
+          "rawQueryText": "SELECT\n  REPLACE (datetime, ' ', 'T') || 'Z' AS datetime,\n  max(balance * usd_price) AS \"USD value\"\nFROM\n  coin_value\nGROUP BY id/100",
           "refId": "A",
+          "timeColumns": [
+            "time",
+            "ts",
+            "datetime"
+          ]
+        },
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "${database}"
+          },
+          "hide": false,
+          "queryText": "SELECT\n  REPLACE (datetime, ' ', 'T') || 'Z' AS datetime,\n  max(balance * btc_price) AS \"BTC value\"\nFROM\n  coin_value\nGROUP BY id/100",
+          "queryType": "table",
+          "rawQueryText": "SELECT\n  REPLACE (datetime, ' ', 'T') || 'Z' AS datetime,\n  max(balance * btc_price) AS \"BTC value\"\nFROM\n  coin_value\nGROUP BY id/100",
+          "refId": "D",
           "timeColumns": [
             "time",
             "ts",
@@ -233,22 +264,6 @@
           "queryType": "table",
           "rawQueryText": "SELECT \n    REPLACE (datetime, ' ', 'T') || 'Z' AS datetime, \n    (crypto_trade_amount / FIRST_VALUE(crypto_trade_amount) OVER (ORDER BY datetime) - 1) AS \"Change in %\"\nFROM \n    trade_history \nWHERE \n    state='COMPLETE' AND selling=0",
           "refId": "C",
-          "timeColumns": [
-            "time",
-            "ts",
-            "datetime"
-          ]
-        },
-        {
-          "datasource": {
-            "type": "frser-sqlite-datasource",
-            "uid": "${database}"
-          },
-          "hide": false,
-          "queryText": "SELECT\n  REPLACE (datetime, ' ', 'T') || 'Z' AS datetime,\n  max(balance * btc_price) AS \"BTC value\"\nFROM\n  coin_value\nGROUP BY strftime('%s', datetime) / 900",
-          "queryType": "table",
-          "rawQueryText": "SELECT\n  REPLACE (datetime, ' ', 'T') || 'Z' AS datetime,\n  max(balance * btc_price) AS \"BTC value\"\nFROM\n  coin_value\nGROUP BY strftime('%s', datetime) / 900",
-          "refId": "D",
           "timeColumns": [
             "time",
             "ts",
@@ -752,13 +767,13 @@
     }]
   },
   "time": {
-    "from": "2021-12-12T23:12:26.000Z",
+    "from": "now-30d",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "Europe/London",
   "title": "btb-grafana-dashboard",
   "uid": "YL0kPz2nz",
-  "version": 2,
+  "version": 5,
   "weekStart": ""
 }
