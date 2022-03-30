@@ -86,9 +86,9 @@ If you're using an Oracle Cloud Instance, you'll need to open the selected port 
 
 Absolutely not required. However, will be accepted as a token of utility.
 
-- BTC: bc1qmhvjdyw6a50f25xhwy5x0vncwlw3lufr9fm77h
-- XNO: nano_3e9hfoqxwjwcmktj75xtp4cr3wihknttjx577masjkncxkfmwdpf4b9jucin
-- SOL: 82KxREbhD4vtB9idR3zUzCstqPd93wmgJeffoDQYDsPf
-- ETH & ERC20: 0x705E805855Fe8d9D30c403cB5c704c490e749112
-- BNB Network: bnb157atfnww0galj8ravzzeq34tklxn5tp4xa976x
+- BTC: `bc1qmhvjdyw6a50f25xhwy5x0vncwlw3lufr9fm77h`
+- XNO: `nano_3e9hfoqxwjwcmktj75xtp4cr3wihknttjx577masjkncxkfmwdpf4b9jucin`
+- SOL: `82KxREbhD4vtB9idR3zUzCstqPd93wmgJeffoDQYDsPf`
+- ETH & ERC20: `0x705E805855Fe8d9D30c403cB5c704c490e749112`
+- BNB Network: `bnb157atfnww0galj8ravzzeq34tklxn5tp4xa976x`
 
